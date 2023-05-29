@@ -1,0 +1,3 @@
+# Gerenciando conteúdo build time com file system - [# NextJS FullStack]
+
+...
