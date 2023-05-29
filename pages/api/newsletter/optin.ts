@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import sendGridMail from "@sendgrid/mail";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // Supabase Setup
@@ -33,16 +34,32 @@ const controllerByMethod = {
     // - Remover X coisas
     
     // Adiciona a pessoa na newsletter
-    await dbClient.from("newsletter_users").insert({ email: email, optin: true });
+    const { error } = await dbClient.from("newsletter_users").insert({ email: email, optin: true });
     // if (error) retorna resposta caso aconteça um problema
     
     // Cria usuários de fato do sistema
     await dbClient.auth.admin.createUser({ email: email });
-
     
-    res
-      .status(httpStatus.Success)
-      .json({ message: "Post request!" });
+    try {
+      console.log(process.env.SENDGRID_KEY);
+      sendGridMail.setApiKey(process.env.SENDGRID_KEY);
+      
+      await sendGridMail.send({
+        to: "", // email
+        from: "",
+        subject: "",
+        html: "Aqui vai o <strong>Conteúdo!!!</strong>"
+      });
+
+      res
+        .status(httpStatus.Success)
+        .json({ message: "Post request!" });
+    } catch (err) {
+      console.error(err);
+      res
+        .status(httpStatus.InternalServerError)
+        .json({ message: "Falhamos em enviar seu email!" });
+    }
   },
   async GET(req: NextApiRequest, res: NextApiResponse) { // Retorna coisas
     const { data, error } = await dbClient
@@ -72,18 +89,3 @@ export default function handler(
   
   controller(request, response);
 }
-// export default function handler(
-//   request: NextApiRequest,
-//   response: NextApiResponse
-// ) {
-//   console.log(request.method);
-//   // Servidor
-//   // Request e Response
-//   // Body e Headers
-//   // Status Http (https://httpstatusdogs.com/)
-//   // Request Methods
-//   const responseBody = { name: 'Mario Souto' };
-//   response
-//     .status(httpStatus.Success)
-//     .json(responseBody); // Vira TEXTO Puro pra passar na rede
-// }

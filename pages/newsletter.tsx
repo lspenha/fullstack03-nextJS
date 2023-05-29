@@ -41,13 +41,6 @@ export default function NewsletterScreen() {
         evento.preventDefault();
         console.log("Estamos enviando os dados do formulario!");
 
-        // Validar 
-        // if(!form.values.emailNewsletter.includes("@")) {
-        //   alert("Você precisa informar um email valido!");
-        //   return;
-        // }
-        // alert("Você foi cadastrado com sucesso! Cheque seu email para garantir")
-
         // Enviar para o servidor o email da pessoa
         fetch("/api/newsletter/optin", {
           method: "POST",
@@ -70,8 +63,8 @@ export default function NewsletterScreen() {
           }}
         >
           <Image
-            src="https://github.com/omariosouto.png"
-            alt="Foto do DevSoutinho"
+            src="https://github.com/lspenha.png"
+            alt="Foto do Lucas"
             styleSheet={{
               borderRadius: "100%",
               width: "100px",
@@ -79,7 +72,7 @@ export default function NewsletterScreen() {
             }}
           />
           <Text variant="heading2">
-            Newsletter do DevSoutinho
+            Newsletter do Lucas
           </Text>
           <NewsletterTextField
             placeholder="Informe seu email"
